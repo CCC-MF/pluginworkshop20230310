@@ -106,7 +106,7 @@ public class ExampleProcedureAnalyzer implements IProcedureAnalyzer {
         newProcedure.setValue("datum", new Item("datum", procedure.getStartDate()));
 
         var text = procedure.getValue("Diagnose");
-        newProcedure.setValue("eingabe", new Item("eingabe", text.getString()));
+        newProcedure.setValue("eingabe", new Item("datenkatalogfeldname", text.getString()));
 
         try {
             onkostarApi.saveProcedure(newProcedure, false);
