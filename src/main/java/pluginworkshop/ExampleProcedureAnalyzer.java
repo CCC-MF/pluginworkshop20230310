@@ -67,7 +67,9 @@ public class ExampleProcedureAnalyzer implements IProcedureAnalyzer {
      */
     @Override
     public boolean isRelevantForAnalyzer(Procedure procedure, Disease disease) {
-        return null != procedure;
+        return null != procedure
+                && disease != null
+                && procedure.getFormName().equals("OS.Diagnose");
     }
 
     /**
@@ -109,7 +111,7 @@ public class ExampleProcedureAnalyzer implements IProcedureAnalyzer {
 
     @Override
     public AnalyzerRequirement getRequirement() {
-        return AnalyzerRequirement.ENTRY;
+        return AnalyzerRequirement.PROCEDURE;
     }
 
     /**
@@ -122,7 +124,8 @@ public class ExampleProcedureAnalyzer implements IProcedureAnalyzer {
     @Override
     public Set<AnalyseTriggerEvent> getTriggerEvents() {
         return Set.of(
-                AnalyseTriggerEvent.EDIT_SAVE
+                AnalyseTriggerEvent.CREATE,
+                AnalyseTriggerEvent.CREATE_LOCK
         );
     }
 }
