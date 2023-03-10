@@ -2,6 +2,7 @@ package pluginworkshop;
 
 import de.itc.onkostar.api.Disease;
 import de.itc.onkostar.api.IOnkostarApi;
+import de.itc.onkostar.api.Item;
 import de.itc.onkostar.api.Procedure;
 import de.itc.onkostar.api.analysis.AnalyseTriggerEvent;
 import de.itc.onkostar.api.analysis.AnalyzerRequirement;
@@ -96,13 +97,25 @@ public class ExampleProcedureAnalyzer implements IProcedureAnalyzer {
 
         var patient = procedure.getPatient();
 
-        patient.getDiseases().forEach(patientDisease -> {
-            var icd10code = patientDisease.getIcd10Code();
-            // Example log! Do not use in production - personal information!
-            logger.info("Found Disease {} for Patient {}", icd10code, patient.getId());
+        var newProcedure = new Procedure(onkostarApi);
+        newProcedure.setPatientId(patient.getId());
+        newProcedure.setFormName("Test");
+        newProcedure.addDisease(disease);
+        newProcedure.setStartDate(procedure.getStartDate());
 
-            // Do something with this data ...
-        });
+        newProcedure.setValue("datum", new Item("datum", procedure.getStartDate()));
+
+        var text = procedure.getValue("Diagnose");
+        newProcedure.setValue("eingabe", new Item("eingabe", text.getString()));
+
+        try {
+            onkostarApi.saveProcedure(newProcedure, false);
+        } catch (Exception e) {
+            logger.error("Nicht gespeichert");
+            return;
+        }
+
+        logger.info("Gespeichert");
     }
 
     @Override
