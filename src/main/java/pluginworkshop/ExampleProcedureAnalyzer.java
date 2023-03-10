@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Map;
 import java.util.Set;
 
 public class ExampleProcedureAnalyzer implements IProcedureAnalyzer {
@@ -69,7 +70,7 @@ public class ExampleProcedureAnalyzer implements IProcedureAnalyzer {
     public boolean isRelevantForAnalyzer(Procedure procedure, Disease disease) {
         return null != procedure
                 && disease != null
-                && procedure.getFormName().equals("OS.Diagnose");
+                && procedure.getFormName().equals("OS.Diagnose.VarianteUKW");
     }
 
     /**
@@ -124,8 +125,17 @@ public class ExampleProcedureAnalyzer implements IProcedureAnalyzer {
     @Override
     public Set<AnalyseTriggerEvent> getTriggerEvents() {
         return Set.of(
-                AnalyseTriggerEvent.CREATE,
-                AnalyseTriggerEvent.CREATE_LOCK
+                AnalyseTriggerEvent.EDIT_SAVE,
+                AnalyseTriggerEvent.EDIT_LOCK
         );
+    }
+
+
+    public String hello(Map<String, Object> input) {
+        var name = input.get("name");
+        if (null == name) {
+            return "Hallo unbekannter Benutzer!";
+        }
+        return String.format("Hallo %s!", name);
     }
 }
